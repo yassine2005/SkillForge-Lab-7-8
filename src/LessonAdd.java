@@ -38,24 +38,24 @@ public class LessonAdd extends JPanel{
         }
 
         try {
-            String courseID = generateCourseID();
-            Lesson newCourse = new Lesson(courseID,lessonTitle , lessonContent);
-            databaseManager.addRecord(newCourse);
+            String lessonID = generateCourseID();
+            Lesson newCourse = new Lesson(lessonID,lessonTitle , lessonContent);
+            databaseManager.addLessons(newCourse);
             databaseManager.saveToFile();
 
-            JOptionPane.showMessageDialog(this, "Course added successfully!" + courseID, "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "lesson added successfully!" + lessonID, "Success", JOptionPane.INFORMATION_MESSAGE);
 
             title.setText("");
             title.requestFocus();
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error adding course!", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Error adding lesson!", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 
     private String generateCourseID() {
         int highest = getHighestID();
-        return String.format("C%04d", highest + 1);
+        return String.format("L%04d", highest + 1);
     }
 
     private int getHighestID() {
