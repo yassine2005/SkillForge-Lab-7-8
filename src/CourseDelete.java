@@ -18,9 +18,11 @@ public class CourseDelete extends JPanel {
         confirmDeleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String id = DeleteID.getText();
+                String id = DeleteID.getText().trim();
                 if(databaseManager.findRecord(id))  {
                     databaseManager.deleteCourse(id);
+                    databaseManager.saveToFile();
+
                 } else {
                     JOptionPane.showMessageDialog(dashboard,"Invalid ID");
                 }

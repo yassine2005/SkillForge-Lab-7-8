@@ -44,7 +44,13 @@ public abstract class JsonDatabaseManager<T extends Record> {
     }
 
     public boolean findRecord(String recordID) {
-        return getRecordByID(recordID) != null;
+
+        for (T records: records){
+            if (records.getID().equals(recordID)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void saveToFile(){
