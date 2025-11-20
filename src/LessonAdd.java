@@ -27,12 +27,12 @@ public class LessonAdd extends JPanel{
         ADDButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleAddCourse();  // ← kept the same because YOU SAID no logic changes
+                handleAddLesson();  // ← kept the same because YOU SAID no logic changes
             }
         });
     }
 
-    private void handleAddCourse() {
+    private void handleAddLesson() {
         String lessonTitle = title.getText().trim();
         String lessonContent = content.getText().trim();
         String s =resource.getText();
@@ -70,11 +70,12 @@ public class LessonAdd extends JPanel{
     }
 
     private int getHighestID() {
+        Course c=databaseManager.getRecordByID(courseId);
         int highest = 0;
-        for (Lesson course : databaseManager.getLessons()) {
-            String courseId = course.getID();
+        for (Lesson lesson : c.getLessons()) {
+            String lessonId = lesson.getID();
             try {
-                String numberPart = courseId.substring(1);
+                String numberPart = lessonId.substring(1);
                 int idNumber = Integer.parseInt(numberPart);
                 if (idNumber > highest) {
                     highest = idNumber;
