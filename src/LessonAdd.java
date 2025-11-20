@@ -37,7 +37,7 @@ public class LessonAdd extends JPanel{
         String lessonContent = content.getText().trim();
         String s =resource.getText();
         ArrayList<String> resources = new ArrayList<>();
-
+          Course course=databaseManager.getRecordByID(courseId);
         if (!s.isEmpty()) {
             String[] parts = s.split(",");
             for (String x : parts) {
@@ -48,10 +48,10 @@ public class LessonAdd extends JPanel{
         }
 
         try {
-            String lessonID = generateCourseID();
+            String lessonID = generateLessonID();
             Lesson newLesson = new Lesson(lessonID,lessonTitle , lessonContent);
             newLesson.setResources(resources);
-            databaseManager.addLessons(newLesson);
+            course.addLesson(newLesson);
             databaseManager.saveToFile();
 
             JOptionPane.showMessageDialog(this, "lesson added successfully!" + lessonID, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -64,7 +64,7 @@ public class LessonAdd extends JPanel{
         }
     }
 
-    private String generateCourseID() {
+    private String generateLessonID() {
         int highest = getHighestID();
         return String.format("L%04d", highest + 1);
     }

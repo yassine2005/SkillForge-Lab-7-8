@@ -14,9 +14,7 @@ public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
     public ArrayList<Lesson> getLessons() {
         return less;
     }
-    public void addLessons(Lesson newRecord) {
-        less.add(newRecord);
-    }
+
 
 
     @Override
