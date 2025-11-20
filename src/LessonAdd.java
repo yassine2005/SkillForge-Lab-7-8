@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class LessonAdd extends JPanel{
 
@@ -11,12 +12,14 @@ public class LessonAdd extends JPanel{
     private JTextField title;
     private JLabel titleLabel;
     private JLabel contentLabel;
-    private final String instructorId;
+    private JTextField resource;
+    private JLabel resourcesLabel;
+    private final String courseId;
     private final CourseDatabaseManager databaseManager;
 
-    public LessonAdd(CourseDatabaseManager databaseManager, String instructorId) {
+    public LessonAdd(CourseDatabaseManager databaseManager, String courseId) {
         this.databaseManager = databaseManager;
-        this.instructorId = instructorId;
+        this.courseId = courseId;
 
         setLayout(new BorderLayout());
         add(add, BorderLayout.CENTER);
@@ -32,15 +35,23 @@ public class LessonAdd extends JPanel{
     private void handleAddCourse() {
         String lessonTitle = title.getText().trim();
         String lessonContent = content.getText().trim();
+        String s =resource.getText();
+        ArrayList<String> resources = new ArrayList<>();
 
+        if (!s.isEmpty()) {
+            String[] parts = s.split(",");
+            for (String x : parts) {
+                resources.add(x.trim());    }
+            }
         if (lessonTitle.isEmpty() || lessonContent.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid course name!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         try {
             String lessonID = generateCourseID();
-            Lesson newCourse = new Lesson(lessonID,lessonTitle , lessonContent);
-            databaseManager.addLessons(newCourse);
+            Lesson newLesson = new Lesson(lessonID,lessonTitle , lessonContent);
+            newLesson.setResources(resources);
+            databaseManager.addLessons(newLesson);
             databaseManager.saveToFile();
 
             JOptionPane.showMessageDialog(this, "lesson added successfully!" + lessonID, "Success", JOptionPane.INFORMATION_MESSAGE);
