@@ -12,7 +12,6 @@ public abstract class JsonDatabaseManager<T extends Record> {
         this.filename = FilesChecker.getPath(filename);
         readFromFile();
     }
-
     public ArrayList<T> getRecords() {
         return records;
     }

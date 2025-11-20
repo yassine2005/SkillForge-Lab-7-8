@@ -7,10 +7,17 @@ import com.google.gson.reflect.TypeToken;
 
 public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
     Type listType = null;
-
+    protected ArrayList<Lesson> less = new ArrayList<>();
     public CourseDatabaseManager(String filename) {
         super(filename);
     }
+    public ArrayList<Lesson> getLessons() {
+        return less;
+    }
+    public void addLessons(Lesson newRecord) {
+        less.add(newRecord);
+    }
+
 
     @Override
     public void readFromFile() {

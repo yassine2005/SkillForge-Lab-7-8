@@ -1,9 +1,10 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Lesson {
+public class Lesson  {
 
-    private final String lessonId,title ,content ;
+    private final String lessonId;
+    private String  title ,content ;
     private List<String> resources = new ArrayList<>();
 
     public Lesson(String lessonId, String title, String content) {
@@ -11,7 +12,9 @@ public class Lesson {
         this.title = title;
         this.content = content;
     }
-
+    public String getID() {
+        return lessonId;
+    }
     public String getContent() {
         return content;
     }

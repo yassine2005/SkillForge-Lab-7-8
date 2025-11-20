@@ -3,12 +3,14 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LessonAdd {
+public class LessonAdd extends JPanel{
 
     private JButton ADDButton;
-    private JTextField description;
+    private JTextField content;
     private JPanel add;
-    private JTextField CourseName;
+    private JTextField title;
+    private JLabel titleLabel;
+    private JLabel contentLabel;
     private final String instructorId;
     private final CourseDatabaseManager databaseManager;
 
@@ -28,23 +30,23 @@ public class LessonAdd {
     }
 
     private void handleAddCourse() {
-        String courseName = CourseName.getText().trim();
-        String courseDescription = description.getText().trim();
+        String lessonTitle = title.getText().trim();
+        String lessonContent = content.getText().trim();
 
-        if (courseName.isEmpty() || courseDescription.isEmpty()) {
+        if (lessonTitle.isEmpty() || lessonContent.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid course name!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
         try {
             String courseID = generateCourseID();
-            Course newCourse = new Course(courseID, courseName, courseDescription, instructorId);
+            Lesson newCourse = new Lesson(courseID,lessonTitle , lessonContent);
             databaseManager.addRecord(newCourse);
             databaseManager.saveToFile();
 
             JOptionPane.showMessageDialog(this, "Course added successfully!" + courseID, "Success", JOptionPane.INFORMATION_MESSAGE);
 
-            CourseName.setText("");
-            CourseName.requestFocus();
+            title.setText("");
+            title.requestFocus();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error adding course!", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -58,7 +60,7 @@ public class LessonAdd {
 
     private int getHighestID() {
         int highest = 0;
-        for (Course course : databaseManager.getRecords()) {
+        for (Lesson course : databaseManager.getLessons()) {
             String courseId = course.getID();
             try {
                 String numberPart = courseId.substring(1);
