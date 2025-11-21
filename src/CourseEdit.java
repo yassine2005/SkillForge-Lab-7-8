@@ -10,6 +10,7 @@ public class CourseEdit extends JPanel {
     private JTextField description;
     private JTextField courseID;
     private JPanel edit;
+    private JButton deleteLesson;
     private final CourseDatabaseManager databaseManager;
 
     public CourseEdit(CourseDatabaseManager databaseManager){
@@ -17,6 +18,13 @@ public class CourseEdit extends JPanel {
 
         setLayout(new BorderLayout());
         add(edit, BorderLayout.CENTER);
+
+        deleteLesson.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
 
         editSpecificLessonButton.addActionListener(new ActionListener() {
             @Override

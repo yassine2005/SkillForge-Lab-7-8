@@ -59,6 +59,7 @@ public class CourseAdd extends JPanel {
             if (choice == JOptionPane.YES_OPTION) {
                 // open LessonAdd for this course
                 changeToLessonAdd(newCourse.getID());
+                databaseManager.saveToFile();
             } else {
                 JOptionPane.showMessageDialog(this, "Course created: " + courseID, "Success", JOptionPane.INFORMATION_MESSAGE);
             }
