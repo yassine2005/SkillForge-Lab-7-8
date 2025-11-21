@@ -1,45 +1,46 @@
 import javax.swing.*;
-import java.awt.*;
 
-public class Enrol extends JPanel {
+public class Enrol {
 
-    public Enrol(Student student) {
+    public static void enroll(Student student, Course course) {
 
-        CourseDatabaseManager d = new CourseDatabaseManager("courses.json");
-
-        setLayout(new BorderLayout());
-
-        JLabel title = new JLabel("Enroll In a Course");
-
-
-        DefaultListModel<Course> model = new DefaultListModel<>();
-
-
-        for (int i = 0; i < d.getRecords().size(); i++) {
-            model.addElement(d.getRecords().get(i));
+        if (student == null || course == null) {
+            JOptionPane.showMessageDialog(null, "Error: Student or Course is null.");
+            return;
         }
 
-        JList<Course> l = new JList<>(model);
-        JScrollPane scroll = new JScrollPane(l);
-        add(scroll, BorderLayout.CENTER);
+        if (student.getEnrolledCourseIds().contains(course.getID())) {
+            JOptionPane.showMessageDialog(null, "You are already enrolled in this course.");
+            return;
+        }
 
-        JButton enrollButton = new JButton("Enroll");
-        enrollButton.setBackground(Color.LIGHT_GRAY);
+        int confirm = JOptionPane.showConfirmDialog(
+                null,
+                "Do you want to enroll in: " + course.getTitle() + "?",
+                "Confirm Enrollment",
+                JOptionPane.YES_NO_OPTION
+        );
 
-        enrollButton.addActionListener(e -> {
+        if (confirm != JOptionPane.YES_OPTION) {
+            JOptionPane.showMessageDialog(null, "Enrollment cancelled.");
+            return;
+        }
 
-            Course selected = l.getSelectedValue();
-            if (selected == null) {
-                JOptionPane.showMessageDialog(this, "Select a course first!");
-                return;
-            }
 
-            d.updateRecord(selected);
-            d.saveToFile();
+        student.addCourse(course);
 
-            JOptionPane.showMessageDialog(this, "Enrolled Successfully!");
-        });
 
-        add(enrollButton, BorderLayout.SOUTH);
+        course.enrollStudent(student);
+
+        CourseDatabaseManager courseDB = new CourseDatabaseManager("courses.json");
+        UserDatabaseManager userDB = new UserDatabaseManager("users.json");
+
+        courseDB.updateRecord(course);
+        courseDB.saveToFile();
+
+        userDB.updateRecord(student);
+        userDB.saveToFile();
+
+        JOptionPane.showMessageDialog(null, "Enrolled Successfully!");
     }
 }

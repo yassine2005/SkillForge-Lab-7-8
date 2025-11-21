@@ -1,35 +1,43 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class StudentDashboard extends DashBoard{
+public class StudentDashboard extends DashBoard {
+
+    private final Student student;
+    private Browse browsePanel;
 
     public StudentDashboard(Student student) {
         super(student);
-        navButtons.setLayout(new GridLayout(1,3, 10, 10));
+        this.student = student;
 
-        JButton viewButton = new JButton();
+        navButtons.setLayout(new GridLayout(1, 2, 10, 10));
+
+        JButton viewButton = new JButton("View");
         viewButton.setBackground(Color.LIGHT_GRAY);
-        viewButton.setText("View");
-        viewButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changeContentPanel(new Browse());
-            }
+        viewButton.addActionListener(e -> {
+            browsePanel = new Browse();
+            changeContentPanel(browsePanel);
         });
         navButtons.add(viewButton);
 
-        JButton enrollButton = new JButton();
+        JButton enrollButton = new JButton("Enroll");
         enrollButton.setBackground(Color.LIGHT_GRAY);
-        enrollButton.setText("Enroll");
-        enrollButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                changeContentPanel(new Enrol((Student) currUser));
-            }
-        });
+        enrollButton.addActionListener(e -> handleEnroll());
         navButtons.add(enrollButton);
     }
 
+    private void handleEnroll() {
+        if (browsePanel == null) {
+            JOptionPane.showMessageDialog(this, "Open View first!");
+            return;
+        }
+
+        Course selected = browsePanel.getSelectedCourse();
+        if (selected == null) {
+            JOptionPane.showMessageDialog(this, "Select a course first!");
+            return;
+        }
+
+        Enrol.enroll(student, selected);
+    }
 }

@@ -1,15 +1,15 @@
 import java.util.ArrayList;
 
-public class User implements Record{
-    //Attributes
+public class User implements Record {
     protected String username;
-    protected String role; //identifier
+    protected String role;
     protected String userID;
     protected String email;
     protected String hashedPassword;
-    protected ArrayList<Course> courses = new ArrayList<>();
 
-    //Constructor
+
+    protected ArrayList<String> courses = new ArrayList<>();
+
     public User(String uID, String role, String username, String email, String hashedPassword) {
         this.username = username;
         this.role = role;
@@ -18,8 +18,6 @@ public class User implements Record{
         this.userID = uID;
     }
 
-
-    //Getters and Setters + toString
     @Override
     public String toString() {
         return "User{" +
@@ -39,47 +37,44 @@ public class User implements Record{
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getRole() {
         return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getHashedPassword() {
         return hashedPassword;
     }
 
-    public void setHashedPassword(String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
-
-    public ArrayList<Course> getCourses(){
+    // returns list of course IDs (keeps existing name to avoid refactors)
+    public ArrayList<String> getCourses() {
         return courses;
     }
 
-    public void setCourses(ArrayList<Course> courses){
+    public void setCourses(ArrayList<String> courses) {
         this.courses = courses;
     }
 
-    public void addCourse(Course course){
-        courses.add(course);
+    public void addCourse(Course course) {
+        if (course == null) return;
+        String id = course.getID();
+        if (!courses.contains(id)) courses.add(id);
+    }
+
+    public void addCourseId(String id) {
+        if (id == null) return;
+        if (!courses.contains(id)) courses.add(id);
     }
 
     public void removeCourse(Course course){
-        courses.remove(course);
+        if (course == null) return;
+        courses.remove(course.getID());
+    }
+
+    public void removeCourseId(String id) {
+        courses.remove(id);
     }
 }

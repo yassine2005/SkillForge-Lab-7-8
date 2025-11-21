@@ -3,6 +3,8 @@ import java.awt.*;
 
 public class Browse extends JPanel {
 
+    private JList<Course> list;
+
     public Browse() {
 
         CourseDatabaseManager db = new CourseDatabaseManager("courses.json");
@@ -14,17 +16,26 @@ public class Browse extends JPanel {
         title.setFont(new Font("Arial", Font.BOLD, 22));
         add(title, BorderLayout.NORTH);
 
-        DefaultListModel<String> model = new DefaultListModel<>();
-
+        DefaultListModel<Course> model = new DefaultListModel<>();
 
         for (int i = 0; i < db.getRecords().size(); i++) {
-            Course c = db.getRecords().get(i);
-            model.addElement(c.getID() + " | " + c.getDescription());
+            model.addElement(db.getRecords().get(i));
         }
 
-        JList<String> list = new JList<>(model);
-        JScrollPane scroll = new JScrollPane(list);
+        list = new JList<>(model);
+        list.setCellRenderer((jl, c, idx, sel, focus) -> {
+            JLabel l = new JLabel(c.getID() + " | " + c.getTitle() + " | " + c.getDescription());
+            if (sel) {
+                l.setOpaque(true);
+                l.setBackground(Color.LIGHT_GRAY);
+            }
+            return l;
+        });
 
-        add(scroll, BorderLayout.CENTER);
+        add(new JScrollPane(list), BorderLayout.CENTER);
+    }
+
+    public Course getSelectedCourse() {
+        return list.getSelectedValue();
     }
 }

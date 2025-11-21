@@ -16,7 +16,7 @@ public class CourseAdd extends JPanel {
         this.instructorId = instructorId;
 
         setLayout(new BorderLayout());
-        add(add,BorderLayout.CENTER);
+        add(add, BorderLayout.CENTER);
 
         ADDButton.addActionListener(new ActionListener() {
             @Override
@@ -30,28 +30,61 @@ public class CourseAdd extends JPanel {
         String courseName = CourseName.getText().trim();
         String courseDescription = description.getText().trim();
 
-        if(courseName.isEmpty() || courseDescription.isEmpty()) {
+        if (courseName.isEmpty() || courseDescription.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid course name!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }
 
-        try{
+        try {
             String courseID = generateCourseID();
             Course newCourse = new Course(courseID, courseName, courseDescription, instructorId);
             databaseManager.addRecord(newCourse);
             databaseManager.saveToFile();
 
-            JOptionPane.showMessageDialog(this, "Course added successfully!" + courseID, "Success", JOptionPane.INFORMATION_MESSAGE);
+
+            UserDatabaseManager userDB = new UserDatabaseManager("users.json");
+            User u = userDB.getRecordByID(instructorId);
+            if (u instanceof Instructor) {
+                Instructor instr = (Instructor) u;
+                instr.addCourse(newCourse); // keep existing API: add Course object
+                userDB.updateRecord(instr);
+                userDB.saveToFile();
+            }
+
+            int choice = JOptionPane.showConfirmDialog(this,
+                    "Course added successfully: " + courseID + ".\nDo you want to add lessons to this course now?",
+                    "Course Added",
+                    JOptionPane.YES_NO_OPTION);
+
+            if (choice == JOptionPane.YES_OPTION) {
+                // open LessonAdd for this course
+                changeToLessonAdd(newCourse.getID());
+            } else {
+                JOptionPane.showMessageDialog(this, "Course created: " + courseID, "Success", JOptionPane.INFORMATION_MESSAGE);
+            }
 
             CourseName.setText("");
             CourseName.requestFocus();
-        }catch(Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error adding course!", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
 
+    private void changeToLessonAdd(String courseId) {
+        // Try to find parent dashboard and change its content panel
+        // Walk up: this panel is used inside InstructorDashboard via changeContentPanel
+        // Simpler approach: replace current panel contents with LessonAdd
+        LessonAdd lessonAdd = new LessonAdd(databaseManager, courseId);
+        removeAll();
+        setLayout(new BorderLayout());
+        add(lessonAdd, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+    }
+
     private String generateCourseID() {
-        int highest = getHighestID();// Count existing users of this role
+        int highest = getHighestID();
         return String.format("C%04d", highest + 1);
     }
 
@@ -59,9 +92,8 @@ public class CourseAdd extends JPanel {
         int highest = 0;
         for (Course course : databaseManager.getRecords()) {
             String courseId = course.getID();
-            // 3mltaha 3ashan t-Extract number from ID
             try {
-                String numberPart = courseId.substring(1); // Remove prefix
+                String numberPart = courseId.substring(1);
                 int idNumber = Integer.parseInt(numberPart);
                 if (idNumber > highest) {
                     highest = idNumber;

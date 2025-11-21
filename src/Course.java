@@ -1,11 +1,14 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Course implements Record{
-    private final String courseId, instructorId;
-    private String title , description;
+public class Course implements Record {
+    private final String courseId;
+    private final String instructorId;
+    private String title, description;
     private List<Lesson> lessons = new ArrayList<>();
-    private List<Student> students = new ArrayList<>();
+
+
+    private ArrayList<String> studentIds = new ArrayList<>();
 
     public Course(String courseId, String title, String description, String instructorId) {
         this.courseId = courseId;
@@ -22,7 +25,7 @@ public class Course implements Record{
                 ", description='" + description + '\'' +
                 ", instructorId='" + instructorId + '\'' +
                 ", lessons=" + lessons +
-                ", students=" + students +
+                ", studentIds=" + studentIds +
                 '}';
     }
 
@@ -47,8 +50,8 @@ public class Course implements Record{
         return lessons;
     }
 
-    public List<Student> getStudents() {
-        return students;
+    public ArrayList<String> getStudentIds() {
+        return studentIds;
     }
 
     public void setTitle(String title) {
@@ -63,14 +66,14 @@ public class Course implements Record{
         this.lessons = lessons;
     }
 
-    public void setStudents(List<Student> students) {
-        this.students = students;
+    public void setStudentIds(ArrayList<String> studentIds) {
+        this.studentIds = studentIds;
     }
 
     public void enrollStudent(Student student) {
-        if (!students.contains(student)) {
-            students.add(student);
-        }
+        if (student == null) return;
+        String sid = student.getID();
+        if (!studentIds.contains(sid)) studentIds.add(sid);
     }
 
     public void addLesson(Lesson lesson) {
@@ -87,6 +90,6 @@ public class Course implements Record{
                 return lesson;
             }
         }
-        return null ;
+        return null;
     }
 }
