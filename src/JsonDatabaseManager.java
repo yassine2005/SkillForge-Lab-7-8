@@ -52,6 +52,11 @@ public abstract class JsonDatabaseManager<T extends Record> {
         return false;
     }
 
+
+
+
+
+
     public void saveToFile(){
         try(FileWriter writer = new FileWriter(filename)){
             writer.write(gson.toJson(records));

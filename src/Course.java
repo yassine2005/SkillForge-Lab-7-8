@@ -6,7 +6,7 @@ public class Course implements Record {
     private final String instructorId;
     private String title, description;
     private List<Lesson> lessons = new ArrayList<>();
-
+    private String approvalStatus;
 
     private ArrayList<String> studentIds = new ArrayList<>();
 
@@ -15,15 +15,17 @@ public class Course implements Record {
         this.title = title;
         this.description = description;
         this.instructorId = instructorId;
+        this.approvalStatus = "PENDING";
     }
 
     @Override
     public String toString() {
         return "Course{" +
-                "courseId='" + courseId + '\'' +
+                "approvalStatus='" + approvalStatus + '\'' +
+                ", courseId='" + courseId + '\'' +
+                ", instructorId='" + instructorId + '\'' +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", instructorId='" + instructorId + '\'' +
                 ", lessons=" + lessons +
                 ", studentIds=" + studentIds +
                 '}';
@@ -92,4 +94,29 @@ public class Course implements Record {
         }
         return null;
     }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus.toUpperCase();
+    }
+
+    public boolean isApproved() {
+        return "APPROVED".equalsIgnoreCase(approvalStatus);
+    }
+
+    public boolean isPending() {
+        return "PENDING".equalsIgnoreCase(approvalStatus);
+    }
+
+    public boolean isRejected() {
+        return "REJECTED".equalsIgnoreCase(approvalStatus);
+    }
+
+
+
+
+
 }

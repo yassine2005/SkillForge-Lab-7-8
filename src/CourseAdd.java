@@ -38,6 +38,7 @@ public class CourseAdd extends JPanel {
         try {
             String courseID = generateCourseID();
             Course newCourse = new Course(courseID, courseName, courseDescription, instructorId);
+            newCourse.getApprovalStatus();
             databaseManager.addRecord(newCourse);
             databaseManager.saveToFile();
 

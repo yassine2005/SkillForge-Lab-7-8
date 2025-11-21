@@ -3,6 +3,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.lang.reflect.Type;
+import java.util.List;
+
 import com.google.gson.reflect.TypeToken;
 
 public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
@@ -11,10 +13,38 @@ public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
     public CourseDatabaseManager(String filename) {
         super(filename);
     }
-    public ArrayList<Lesson> getLessons() {
-        return less;
+
+    public List<Course> getPendingCourses() {
+        List<Course> pending = new ArrayList<>();
+        for (Course course : records) {
+            if (course.isPending()) {
+                pending.add(course);
+            }
+        }
+        return pending;
     }
 
+    public List<Course> getApprovedCourses() {
+        List<Course> approved = new ArrayList<>();
+        for (Course course : records) {
+            if (course.isApproved()) {
+                approved.add(course);
+            }
+        }
+        return approved;
+    }
+
+      public void approveCourses(String id) {
+        Course course = getRecordByID(id);
+          course.setApprovalStatus("Approved");
+          updateRecord(course);
+      }
+
+    public void rejectCourses(String id) {
+        Course course = getRecordByID(id);
+        course.setApprovalStatus("Rejected") ;
+        updateRecord(course);
+    }
 
 
     @Override
