@@ -53,7 +53,7 @@ public class AuthenticateManager {
             return null;
         }
 
-        // Return CORRECT object type
+
         User realUser;
 
         switch (raw.getRole().toLowerCase()) {

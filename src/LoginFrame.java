@@ -22,7 +22,7 @@ public class LoginFrame extends JFrame {
         setVisible(true);
         setResizable(false);
 
-        // ENTER in password triggers login
+
         passWord.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {

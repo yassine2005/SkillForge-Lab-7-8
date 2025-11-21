@@ -26,7 +26,7 @@ public class SignUp extends JFrame {
         setResizable(false);
 
         role.removeAllItems();
-        role.addItem("");             // EMPTY first option
+        role.addItem("");
         role.addItem("Student");
         role.addItem("Instructor");
         role.addItem("Admin");

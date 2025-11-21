@@ -12,7 +12,7 @@ public class StudentDashboard extends DashBoard {
 
         navButtons.setLayout(new GridLayout(1, 3, 10, 10));
 
-        // VIEW ALL COURSES
+
         JButton viewButton = new JButton("View");
         viewButton.setBackground(Color.LIGHT_GRAY);
         viewButton.addActionListener(e -> {
@@ -21,13 +21,13 @@ public class StudentDashboard extends DashBoard {
         });
         navButtons.add(viewButton);
 
-        // ENROLL IN SELECTED VIEW COURSE
+
         JButton enrollButton = new JButton("Enroll");
         enrollButton.setBackground(Color.LIGHT_GRAY);
         enrollButton.addActionListener(e -> handleEnroll());
         navButtons.add(enrollButton);
 
-        // ★ MY COURSES (Progress, Lessons, Quiz)
+
         JButton myCoursesButton = new JButton("My Courses");
         myCoursesButton.setBackground(Color.LIGHT_GRAY);
         myCoursesButton.addActionListener(e -> {

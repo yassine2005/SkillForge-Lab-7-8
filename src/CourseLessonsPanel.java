@@ -22,9 +22,6 @@ public class CourseLessonsPanel extends JPanel {
 
         list = new JList<>(model);
 
-        // ------------------------------
-        // CUSTOM RENDERER WITH GREEN CHECK
-        // ------------------------------
         list.setCellRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(
@@ -49,9 +46,7 @@ public class CourseLessonsPanel extends JPanel {
             }
         });
 
-        // ------------------------------
-        // DOUBLE CLICK -> OPEN LESSON VIEWER
-        // ------------------------------
+
         list.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -77,9 +72,7 @@ public class CourseLessonsPanel extends JPanel {
         add(new JScrollPane(list), BorderLayout.CENTER);
     }
 
-    // -----------------------------------------
-    // CHECK IF LESSON IS COMPLETED BY STUDENT
-    // -----------------------------------------
+
     private boolean isLessonCompleted(Lesson lesson) {
         for (Progress p : student.getProgressTrackers()) {
             if (p.getCourseId().equals(course.getID())) {
@@ -93,9 +86,7 @@ public class CourseLessonsPanel extends JPanel {
         return false;
     }
 
-    // -----------------------------------------
-    // REFRESH LIST AFTER QUIZ COMPLETION
-    // -----------------------------------------
+
     public void refreshList() {
         list.repaint();
     }
