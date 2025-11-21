@@ -11,7 +11,7 @@ public class ViewCoursesPanel extends JPanel {
         CourseDatabaseManager db = new CourseDatabaseManager("courses.json");
 
         DefaultListModel<Course> model = new DefaultListModel<>();
-        for (Course c : db.getRecords()) model.addElement(c);
+        for (Course c : db.getPendingCourses()) model.addElement(c);
 
         JList<Course> list = new JList<>(model);
 
@@ -54,9 +54,10 @@ public class ViewCoursesPanel extends JPanel {
         approve.addActionListener(e -> {
             Course c = list.getSelectedValue();
             if (c != null) {
-                c.setApprovalStatus("APPROVED");
-                db.updateRecord(c);
+                db.approveCourses(c.getID());
                 db.saveToFile();
+
+                model.removeElement(c);
                 list.repaint();
             }
         });
@@ -64,9 +65,10 @@ public class ViewCoursesPanel extends JPanel {
         reject.addActionListener(e -> {
             Course c = list.getSelectedValue();
             if (c != null) {
-                c.setApprovalStatus("REJECTED");
-                db.updateRecord(c);
+                db.rejectCourses(c.getID());
                 db.saveToFile();
+
+                model.removeElement(c);
                 list.repaint();
             }
         });
