@@ -19,17 +19,18 @@ public class AuthenticateManager {
 
         User newUser;
 
-        if (role.equalsIgnoreCase("student")) {
-            newUser = new Student(userId, role, username, email, hashedPassword);
-        }
-        else if (role.equalsIgnoreCase("instructor")) {
-            newUser = new Instructor(userId, role, username, email, hashedPassword);
-        }
-        else if (role.equalsIgnoreCase("admin")) {
-            newUser = new Admin(userId, role, username, email, hashedPassword);
-        }
-        else {
-            throw new IllegalArgumentException("Invalid role selected");
+        switch (role.toLowerCase()) {
+            case "student":
+                newUser = new Student(userId, role, username, email, hashedPassword);
+                break;
+            case "instructor":
+                newUser = new Instructor(userId, role, username, email, hashedPassword);
+                break;
+            case "admin":
+                newUser = new Admin(userId, role, username, email, hashedPassword);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid role selected");
         }
 
         database.addRecord(newUser);
@@ -42,27 +43,41 @@ public class AuthenticateManager {
             return null;
         }
 
-        User user = database.getRecordByUsername(username);
-        if (user == null) {
+        User raw = database.getRecordByUsername(username);
+        if (raw == null) {
             return null;
         }
 
         String hashedPassword = PasswordHashing.hashPassword(password);
-        if (!hashedPassword.equals(user.getHashedPassword())) {
+        if (!hashedPassword.equals(raw.getHashedPassword())) {
             return null;
         }
 
-        if (user.getRole().equalsIgnoreCase("student")) {
-            return new Student(user.getID(), user.getRole(), user.getUsername(), user.getEmail(), user.getHashedPassword());
-        }
-        else if (user.getRole().equalsIgnoreCase("instructor")) {
-            return new Instructor(user.getID(), user.getRole(), user.getUsername(), user.getEmail(), user.getHashedPassword());
-        }
-        else if (user.getRole().equalsIgnoreCase("admin")) {
-            return new Admin(user.getID(), user.getRole(), user.getUsername(), user.getEmail(), user.getHashedPassword());
-        }
+        // Return CORRECT object type
+        User realUser;
 
-        return null;
+        switch (raw.getRole().toLowerCase()) {
+            case "student":
+                Student s = new Student(raw.getID(), raw.getRole(), raw.getUsername(),
+                        raw.getEmail(), raw.getHashedPassword());
+                s.setCourses(raw.getCourses());
+                return s;
+
+            case "instructor":
+                Instructor i = new Instructor(raw.getID(), raw.getRole(), raw.getUsername(),
+                        raw.getEmail(), raw.getHashedPassword());
+                i.setCourses(raw.getCourses());
+                return i;
+
+            case "admin":
+                Admin a = new Admin(raw.getID(), raw.getRole(), raw.getUsername(),
+                        raw.getEmail(), raw.getHashedPassword());
+                a.setCourses(raw.getCourses());
+                return a;
+
+            default:
+                return null;
+        }
     }
 
     private String generatedID(String role) {

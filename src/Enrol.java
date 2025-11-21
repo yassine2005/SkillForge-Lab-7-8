@@ -9,29 +9,30 @@ public class Enrol {
             return;
         }
 
-        if (student.getEnrolledCourseIds().contains(course.getID())) {
-            JOptionPane.showMessageDialog(null, "You are already enrolled in this course.");
+        // IMPORTANT — always check using student.getCourses()
+        if (student.getCourses().contains(course.getID())) {
+            JOptionPane.showMessageDialog(null, "You are already enrolled in this course!");
             return;
         }
 
         int confirm = JOptionPane.showConfirmDialog(
                 null,
-                "Do you want to enroll in: " + course.getTitle() + "?",
+                "Enroll in: " + course.getTitle() + "?",
                 "Confirm Enrollment",
                 JOptionPane.YES_NO_OPTION
         );
 
         if (confirm != JOptionPane.YES_OPTION) {
-            JOptionPane.showMessageDialog(null, "Enrollment cancelled.");
             return;
         }
 
-
+        // Add course to student memory object
         student.addCourse(course);
 
-
+        // Add student to course memory object
         course.enrollStudent(student);
 
+        // Save to DB
         CourseDatabaseManager courseDB = new CourseDatabaseManager("courses.json");
         UserDatabaseManager userDB = new UserDatabaseManager("users.json");
 
@@ -41,6 +42,15 @@ public class Enrol {
         userDB.updateRecord(student);
         userDB.saveToFile();
 
-        JOptionPane.showMessageDialog(null, "Enrolled Successfully!");
+        // *** CRITICAL PART ***
+        // Reload student so UI gets updated data
+        Student refreshed = (Student) userDB.getRecordByID(student.getID());
+
+        // Copy new data into original student object
+        if (refreshed != null) {
+            student.setCourses(refreshed.getCourses());
+        }
+
+        JOptionPane.showMessageDialog(null, "Enrolled successfully!");
     }
 }

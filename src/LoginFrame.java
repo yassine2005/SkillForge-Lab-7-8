@@ -13,6 +13,7 @@ public class LoginFrame extends JFrame {
     public LoginFrame() {
         UserDatabaseManager database = new UserDatabaseManager("users.json");
         this.auth = new AuthenticateManager(database);
+
         setTitle("Login");
         setContentPane(login);
         setSize(280, 200);
@@ -21,12 +22,11 @@ public class LoginFrame extends JFrame {
         setVisible(true);
         setResizable(false);
 
+        // ENTER in password triggers login
         passWord.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    handleLogin();
-                }
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) handleLogin();
             }
         });
 
@@ -52,7 +52,7 @@ public class LoginFrame extends JFrame {
         String password = new String(passWord.getPassword());
 
         if (userName.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter both userName and password!",
+            JOptionPane.showMessageDialog(this, "Enter both username and password!",
                     "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;
         }
@@ -66,25 +66,28 @@ public class LoginFrame extends JFrame {
 
                 dispose();
 
-                if (user.getRole().equalsIgnoreCase("student")) {
-                    new StudentDashboard((Student) user);
-                } else if (user.getRole().equalsIgnoreCase("instructor")) {
-                    CourseDatabaseManager database = new CourseDatabaseManager("courses.json");
-                    new InstructorDashboard((Instructor) user, database);
-                } else if (user.getRole().equalsIgnoreCase("admin")) {
-                    new AdminDashboard((Admin) user);
+                switch (user.getRole().toLowerCase()) {
+                    case "student":
+                        new StudentDashboard((Student) user);
+                        break;
+                    case "instructor":
+                        new InstructorDashboard((Instructor) user, new CourseDatabaseManager("courses.json"));
+                        break;
+                    case "admin":
+                        new AdminDashboard((Admin) user);
+                        break;
                 }
-
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid userName or password!",
+                JOptionPane.showMessageDialog(this, "Invalid username or password!",
                         "Login Failed", JOptionPane.ERROR_MESSAGE);
                 passWord.setText("");
                 passWord.requestFocus();
             }
 
         } catch (Exception e) {
+            e.printStackTrace(); // debug
             JOptionPane.showMessageDialog(this,
-                    "An error occurred during login. Please try again.",
+                    "An error occurred during login.",
                     "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
