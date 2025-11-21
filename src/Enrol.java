@@ -9,7 +9,7 @@ public class Enrol {
             return;
         }
 
-        // IMPORTANT — always check using student.getCourses()
+
         if (student.getCourses().contains(course.getID())) {
             JOptionPane.showMessageDialog(null, "You are already enrolled in this course!");
             return;
@@ -26,13 +26,13 @@ public class Enrol {
             return;
         }
 
-        // Add course to student memory object
+
         student.addCourse(course);
 
-        // Add student to course memory object
+
         course.enrollStudent(student);
 
-        // Save to DB
+
         CourseDatabaseManager courseDB = new CourseDatabaseManager("courses.json");
         UserDatabaseManager userDB = new UserDatabaseManager("users.json");
 
@@ -42,11 +42,11 @@ public class Enrol {
         userDB.updateRecord(student);
         userDB.saveToFile();
 
-        // *** CRITICAL PART ***
-        // Reload student so UI gets updated data
+
+
         Student refreshed = (Student) userDB.getRecordByID(student.getID());
 
-        // Copy new data into original student object
+
         if (refreshed != null) {
             student.setCourses(refreshed.getCourses());
         }
