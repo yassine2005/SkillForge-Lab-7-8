@@ -25,49 +25,25 @@ public class SignUp extends JFrame {
         setVisible(true);
         setResizable(false);
 
-        userName.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        role.removeAllItems();
+        role.addItem("");             // EMPTY first option
+        role.addItem("Student");
+        role.addItem("Instructor");
+        role.addItem("Admin");
 
-            }
-        });
-        Email.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        userName.addActionListener(e -> {});
+        Email.addActionListener(e -> {});
+        role.addActionListener(e -> {});
+        ConfirmedPass.addActionListener(e -> {});
+        Password.addActionListener(e -> {});
 
-            }
+        backButton.addActionListener(e -> {
+            dispose();
+            new EntryFrame();
         });
-        role.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
 
-            }
-        });
-        ConfirmedPass.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        Password.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new EntryFrame();
-            }
-        });
-        signUpButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleSignUp();
-                dispose();
-            }
+        signUpButton.addActionListener(e -> {
+            handleSignUp();
         });
     }
 
@@ -77,6 +53,11 @@ public class SignUp extends JFrame {
         String password = new String(Password.getPassword());
         String confirmedPass = new String(ConfirmedPass.getPassword());
         String userRole = (String) role.getSelectedItem();
+
+        if (userRole == null || userRole.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please choose a role!", "Invalid Role", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         if (!ValidationResult.isValidUsername(username)) {
             JOptionPane.showMessageDialog(this, ValidationResult.getUsernameError(), "Invalid Username", JOptionPane.ERROR_MESSAGE);
@@ -93,12 +74,12 @@ public class SignUp extends JFrame {
         }
 
         if (!ValidationResult.isValidPassword(password)) {
-            JOptionPane.showMessageDialog(this, ValidationResult.getPasswordError(),
-                    "Invalid Password", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, ValidationResult.getPasswordError(), "Invalid Password", JOptionPane.ERROR_MESSAGE);
             return;
         }
-        if(!password.equals(confirmedPass)){
-            JOptionPane.showMessageDialog(null, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
+
+        if (!password.equals(confirmedPass)) {
+            JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
             ConfirmedPass.setText("");
             Password.setText("");
             Password.requestFocus();
@@ -107,12 +88,10 @@ public class SignUp extends JFrame {
 
         try {
             User newUser = authManager.signup(username, email, password, userRole);
-            JOptionPane.showMessageDialog(this, "Account created successfully!\nWelcome, " + newUser.getUsername() + " You can now sign in with your credentials.", "Success", JOptionPane.INFORMATION_MESSAGE);
-
+            JOptionPane.showMessageDialog(this, "Account created successfully!\nWelcome, " + newUser.getUsername(), "Success", JOptionPane.INFORMATION_MESSAGE);
             dispose();
             new LoginFrame();
         } catch (IllegalArgumentException e){
-            System.out.println("Status: FAILED - " + e.getMessage());
             JOptionPane.showMessageDialog(this, e.getMessage(), "Signup Failed", JOptionPane.ERROR_MESSAGE);
         }
     }

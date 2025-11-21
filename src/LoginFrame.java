@@ -12,7 +12,7 @@ public class LoginFrame extends JFrame {
 
     public LoginFrame() {
         UserDatabaseManager database = new UserDatabaseManager("users.json");
-        this.auth= new AuthenticateManager(database);
+        this.auth = new AuthenticateManager(database);
         setTitle("Login");
         setContentPane(login);
         setSize(280, 200);
@@ -21,10 +21,6 @@ public class LoginFrame extends JFrame {
         setVisible(true);
         setResizable(false);
 
-        passWord.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {}
-        });
         passWord.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -33,23 +29,14 @@ public class LoginFrame extends JFrame {
                 }
             }
         });
-        userName.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {}
+
+        loginButton.addActionListener(e -> handleLogin());
+
+        backButton.addActionListener(e -> {
+            dispose();
+            new EntryFrame();
         });
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleLogin();
-            }
-        });
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dispose();
-                new EntryFrame();
-            }
-        });
+
         userName.addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent e) {
@@ -63,36 +50,42 @@ public class LoginFrame extends JFrame {
     private void handleLogin() {
         String userName = this.userName.getText().trim();
         String password = new String(passWord.getPassword());
+
         if (userName.isEmpty() || password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter both userName and password!", "Missing Information", JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Please enter both userName and password!",
+                    "Missing Information", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         try {
             User user = auth.login(userName, password);
             if (user != null) {
-                JOptionPane.showMessageDialog(this, "Login successful!\nWelcome, " + user.getUsername(), "Success", JOptionPane.INFORMATION_MESSAGE);
-                this.dispose();
+                JOptionPane.showMessageDialog(this,
+                        "Login successful!\nWelcome, " + user.getUsername(),
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                dispose();
 
                 if (user.getRole().equalsIgnoreCase("student")) {
                     new StudentDashboard((Student) user);
                 } else if (user.getRole().equalsIgnoreCase("instructor")) {
                     CourseDatabaseManager database = new CourseDatabaseManager("courses.json");
                     new InstructorDashboard((Instructor) user, database);
+                } else if (user.getRole().equalsIgnoreCase("admin")) {
+                    new AdminDashboard((Admin) user);
                 }
 
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid userName or password!", "Login Failed", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Invalid userName or password!",
+                        "Login Failed", JOptionPane.ERROR_MESSAGE);
                 passWord.setText("");
                 passWord.requestFocus();
             }
 
-        } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, e.getMessage(), "Validation Error", JOptionPane.ERROR_MESSAGE);
-
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "An error occurred during login. Please try again.", "Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                    "An error occurred during login. Please try again.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 }

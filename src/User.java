@@ -49,7 +49,6 @@ public class User implements Record {
         return hashedPassword;
     }
 
-    // returns list of course IDs (keeps existing name to avoid refactors)
     public ArrayList<String> getCourses() {
         return courses;
     }
