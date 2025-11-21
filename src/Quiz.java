@@ -25,7 +25,7 @@ public class Quiz {
  public void setQuestions(List<Questions> questions) {
       this.questions = questions;
  }
-    public void addQuestion(Questions question) {
+  public void addQuestion(Questions question) {
       questions.add(question);
   }
 

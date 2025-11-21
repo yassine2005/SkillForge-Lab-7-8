@@ -6,7 +6,7 @@ public class Lesson  {
     private final String lessonId;
     private String  title ,content ;
     private List<String> resources = new ArrayList<>();
-
+    private Quiz quiz;
     public Lesson(String lessonId, String title, String content) {
         this.lessonId = lessonId;
         this.title = title;
@@ -34,6 +34,10 @@ public class Lesson  {
     public void setResources(List<String> resources) {
         this.resources = resources;
     }
-
-
+    public Quiz getQuiz() {
+      return quiz;
+    }
+   public void setQuiz(Quiz quiz) {
+        this.quiz = quiz;
+   }
 }
