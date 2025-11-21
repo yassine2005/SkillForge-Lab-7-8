@@ -7,20 +7,20 @@ public class AuthenticateManager {
     }
 
     public User signup(String username, String email, String password, String role) {
-        // Check if fields are empty
+
         if (username.isEmpty() || email.isEmpty() || password.isEmpty()) {
             throw new IllegalArgumentException("All fields are required!");
         }
 
-        // Check if email already exists
+
         if (database.getRecordByEmail(email) != null) {
             throw new IllegalArgumentException("Email already registered!");
         }
 
-        //Hash the password
+
         String hashedPassword = PasswordHashing.hashPassword(password);
 
-        // Generate unique ID
+
         String userId = generatedID(role);
 
         User newUser;
@@ -41,13 +41,13 @@ public class AuthenticateManager {
             return null;
         }
 
-        // 2. Get user from database
+
         User user = database.getRecordByUsername(username);
         if (user == null) {
             return null; // User not found
         }
 
-        // 3. Check if password matches
+
         String hashedPassword = PasswordHashing.hashPassword(password);
         if (hashedPassword.equals(user.getHashedPassword())) {
 
@@ -57,7 +57,7 @@ public class AuthenticateManager {
                 return new Instructor(user.getID(), user.getRole(), username, user.getEmail(), hashedPassword);
             }
         }
-        return null; // Wrong password
+        return null;
     }
 
     private String generatedID(String role) {
