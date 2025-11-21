@@ -1,20 +1,20 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private String title;
+    private int minScore;
     private final String quizId;
     private List<Questions> questions;
-  public Quiz(String title, String quizId) {
-        this.title = title;
+    private int score;
+    private int maxScore;
+
+  public Quiz( String quizId) {
+      this.minScore= (int) (0.5* questions.size());
       this.quizId = quizId;
+      this.maxScore= (int) (1* questions.size());
   }
 
-  public String getTitle() {
-    return title;
-  }
-  public void setTitle(String title) {
-    this.title = title;
-  }
+
    public String getQuizId() {
       return quizId;
    }
@@ -31,6 +31,31 @@ public class Quiz {
 
     public void removeQuestion(Questions question) {
         questions.remove(question);
+    }
+    public int calculateScore(ArrayList<Integer> userAnswers) {
+        int score = 0;
+
+        for (int i = 0; i < questions.size(); i++) {
+            if (userAnswers.get(i) == questions.get(i).getCorrect()) {
+                score++;
+            }
+        }
+        return score;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    public double getPercentage() {
+        return maxScore > 0 ? (double) score / maxScore * 100 : 0;
     }
 
 }

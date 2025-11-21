@@ -3,7 +3,7 @@ import java.util.List;
 public class Questions {
     private final String questionId;
     private List<String> options;
-    private int correctAnswers;
+    private int correct;
     private String questionText;
 
  public Questions(String questionId) {
@@ -27,11 +27,11 @@ public class Questions {
     public void setOptions(List<String> options) {
      this.options = options;
    }
- public int getCorrectAnswers() {
-     return correctAnswers;
+ public int getCorrect() {
+     return correct;
  }
- public void setCorrectAnswers(int correctAnswers) {
-     this.correctAnswers = correctAnswers;
+ public void setCorrect(int correct) {
+     this.correct = correct;
  }
 
 }
