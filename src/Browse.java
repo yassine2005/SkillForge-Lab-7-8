@@ -19,7 +19,8 @@ public class Browse extends JPanel {
         DefaultListModel<Course> model = new DefaultListModel<>();
 
         for (int i = 0; i < db.getRecords().size(); i++) {
-            model.addElement(db.getRecords().get(i));
+            if(db.getRecords().get(i).isApproved()){
+            model.addElement(db.getRecords().get(i));}
         }
 
         list = new JList<>(model);
