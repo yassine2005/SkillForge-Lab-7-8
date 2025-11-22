@@ -12,7 +12,7 @@ public class CourseEdit extends JPanel {
     private JPanel edit;
     private JButton deleteLesson;
     private final CourseDatabaseManager databaseManager;
-
+    private InstructorDashboard instructorDashboard;
     public CourseEdit(CourseDatabaseManager databaseManager){
         this.databaseManager = databaseManager;
 
@@ -29,6 +29,18 @@ public class CourseEdit extends JPanel {
         editSpecificLessonButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String id = courseID.getText().trim();
+                if (id.isEmpty()) {
+                    JOptionPane.showMessageDialog(CourseEdit.this, "Enter Course ID ");
+                    return;
+                }
+
+                LessonEdit ld = new LessonEdit(databaseManager, id);
+                CourseEdit.this.removeAll();
+                CourseEdit.this.setLayout(new BorderLayout());
+                CourseEdit.this.add(ld, BorderLayout.CENTER);
+                CourseEdit.this.revalidate();
+                CourseEdit.this.repaint();
 
             }
         });
@@ -40,8 +52,28 @@ public class CourseEdit extends JPanel {
                 c.setDescription(description.getText());
                 databaseManager.updateRecord(c);
                 databaseManager.saveToFile();
+                JOptionPane.showMessageDialog(CourseEdit.this,"Course edited successfully: "  );
             }
         });
+
+        deleteLesson.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String id = courseID.getText().trim();
+                if (id.isEmpty()) {
+                    JOptionPane.showMessageDialog(CourseEdit.this, "Enter Course ID ");
+                    return;
+                }
+
+                LessonDelete ld = new LessonDelete(databaseManager, id);
+                CourseEdit.this.removeAll();
+                CourseEdit.this.setLayout(new BorderLayout());
+                CourseEdit.this.add(ld, BorderLayout.CENTER);
+                CourseEdit.this.revalidate();
+                CourseEdit.this.repaint();
+            }
+        });
+
     }
 
 

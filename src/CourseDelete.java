@@ -22,7 +22,7 @@ public class CourseDelete extends JPanel {
                 if(databaseManager.findRecord(id))  {
                     databaseManager.deleteCourse(id);
                     databaseManager.saveToFile();
-
+                    JOptionPane.showMessageDialog(dashboard,"course deleted ");
                 } else {
                     JOptionPane.showMessageDialog(dashboard,"Invalid ID");
                 }

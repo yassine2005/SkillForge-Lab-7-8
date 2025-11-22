@@ -8,9 +8,11 @@ public class LessonDelete extends JPanel {
     private JButton confirmDeleteButton;
     private JPanel delete;
     private final CourseDatabaseManager databaseManager;
+    private String courseID;
 
-    public LessonDelete(CourseDatabaseManager databaseManager, InstructorDashboard dashboard) {
+    public LessonDelete(CourseDatabaseManager databaseManager, String CourseId) {
         this.databaseManager = databaseManager;
+        this.courseID = CourseId;
 
         setLayout(new BorderLayout());
         add(delete, BorderLayout.CENTER);
@@ -19,12 +21,15 @@ public class LessonDelete extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String id = DeleteID.getText().trim();
-                if(databaseManager.findRecord(id))  {
-                    databaseManager.deleteCourse(id);
+                Course course=databaseManager.getRecordByID(CourseId);
+                Lesson lesson=course.getLessonById(id);
+                if(lesson!=null)  {
+                    course.deleteLesson(lesson);
+                    databaseManager.updateRecord(course);
                     databaseManager.saveToFile();
-
+                    JOptionPane.showMessageDialog(LessonDelete.this,"Lesson deleted successfully");
                 } else {
-                    JOptionPane.showMessageDialog(dashboard,"Invalid ID");
+                    JOptionPane.showMessageDialog(LessonDelete.this,"Invalid ID");
                 }
             }
         });
