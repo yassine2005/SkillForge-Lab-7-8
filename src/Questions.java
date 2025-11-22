@@ -1,18 +1,17 @@
 import java.util.List;
 
 public class Questions {
-    private final String questionId;
     private List<String> options;
-    private int correct;
+     private String correct;
     private String questionText;
 
- public Questions(String questionId) {
-        this.questionId = questionId;
+ public Questions(String questionText,String correct)
+ {
+        this.questionText = questionText;
+          this.correct = correct;
      }
-     public String getQuestionId() {
-     return questionId;
-     }
- public List<String> getOptions() {
+
+    public List<String> getOptions() {
      return options;
  }
 
@@ -27,11 +26,17 @@ public class Questions {
     public void setOptions(List<String> options) {
      this.options = options;
    }
- public int getCorrect() {
-     return correct;
- }
- public void setCorrect(int correct) {
-     this.correct = correct;
- }
 
+   public String getCorrect() {
+     return correct;
+   }
+
+   public void setCorrect(String correct) {
+     this.correct = correct;
+   }
+
+
+    public void addOption(String option) {
+     options.add(option);
+  }
 }
