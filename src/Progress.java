@@ -70,6 +70,33 @@ public class Progress {
         }
     }
 
+    public void addQuizResult(Lesson lesson, QuizResult result) {
+        Tracker tracker = findTracker(lesson);
+        if (tracker != null) {
+            tracker.addQuizResult(result);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public List<QuizResult> getQuizResults() {
+        ArrayList<QuizResult> allResults = new ArrayList<>();
+        for (Tracker tracker : trackers) {
+            allResults.addAll(tracker.getQuizHistory());
+        }
+        return allResults;
+    }
+
+    public List<QuizResult> getQuizResultsForCompletedLessons() {
+        ArrayList<QuizResult> completedResults = new ArrayList<>();
+        for (Tracker tracker : trackers) {
+            if (tracker.getState()) {
+                completedResults.addAll(tracker.getQuizHistory());
+            }
+        }
+        return completedResults;
+    }
+
     public String getStudentID() {
         return studentID;
     }

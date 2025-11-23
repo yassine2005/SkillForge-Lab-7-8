@@ -28,6 +28,19 @@ public class Student extends User {
         }
     }
 
+    public void addQuizResult(String courseId, Lesson lesson, QuizResult result) {
+        for (Progress progress : progressTrackers) {
+            if (progress.getCourseId().equals(courseId)) {
+                for (Tracker tracker : progress.getTrackers()) {
+                    if (tracker.getLesson().equals(lesson)) {
+                        tracker.addQuizResult(result);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
     public ArrayList<String> getEnrolledCourseIds() {
         return getCourses();
     }
