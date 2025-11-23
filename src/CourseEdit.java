@@ -11,7 +11,6 @@ public class CourseEdit extends JPanel {
     private JTextField courseID;
     private JPanel edit;
     private JButton deleteLesson;
-    private JButton addLesson;
     private final CourseDatabaseManager databaseManager;
     private InstructorDashboard instructorDashboard;
     public CourseEdit(CourseDatabaseManager databaseManager){
@@ -26,27 +25,6 @@ public class CourseEdit extends JPanel {
 
             }
         });
-
-        addLesson.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String id = courseID.getText().trim();
-                if (id.isEmpty()) {
-                    JOptionPane.showMessageDialog(CourseEdit.this, "Enter Course ID ");
-                    return;
-                }
-
-                LessonAdd ld = new LessonAdd(databaseManager, id);
-                CourseEdit.this.removeAll();
-                CourseEdit.this.setLayout(new BorderLayout());
-                CourseEdit.this.add(ld, BorderLayout.CENTER);
-                CourseEdit.this.revalidate();
-                CourseEdit.this.repaint();
-
-
-            }
-        });
-
 
         editSpecificLessonButton.addActionListener(new ActionListener() {
             @Override

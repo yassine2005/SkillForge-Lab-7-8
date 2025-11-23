@@ -3,10 +3,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class EntryFrame extends JFrame {
-    private JPanel Entry = new JPanel();
-    private JButton signUpButton = new JButton();
-    private JButton loginButton = new JButton();
-    private JLabel WelcomeMessage = new JLabel();
+    private JPanel Entry;
+    private JButton signUpButton;
+    private JButton loginButton;
+    private JLabel WelcomeMessage;
 
     public EntryFrame() {
         setTitle("Skill Forge - Welcome");

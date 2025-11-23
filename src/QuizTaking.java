@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public class QuizTaking extends JDialog {
 
@@ -13,6 +14,13 @@ public class QuizTaking extends JDialog {
         this.student = student;
         this.course = course;
         this.lesson = lesson;
+
+        // check if already completed -> if yes, show message and close
+        if (isLessonAlreadyCompleted()) {
+            JOptionPane.showMessageDialog(owner, "You have already completed this lesson.", "Already Completed", JOptionPane.INFORMATION_MESSAGE);
+            dispose();
+            return;
+        }
 
         setLayout(new BorderLayout());
 
@@ -32,14 +40,35 @@ public class QuizTaking extends JDialog {
         add(bottom, BorderLayout.SOUTH);
 
         finish.addActionListener((ActionEvent e) -> {
-            markLessonCompleted();
-            JOptionPane.showMessageDialog(this, "Quiz finished. Lesson marked completed.");
-            dispose();
+            try {
+                markLessonCompleted();
+                JOptionPane.showMessageDialog(this, "Quiz finished. Lesson marked completed.");
+                dispose();
+                checkAndShowCertificateIfComplete(owner);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(this, "Error when finishing quiz: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         });
 
         cancel.addActionListener((ActionEvent e) -> dispose());
 
         setSize(480, 320);
+        setLocationRelativeTo(owner);
+    }
+
+    private boolean isLessonAlreadyCompleted() {
+        for (Progress p : student.getProgressTrackers()) {
+            if (p.getCourseId().equals(course.getID())) {
+                for (Tracker t : p.getTrackers()) {
+                    Lesson l = t.getLesson();
+                    if (l != null && l.getLessonId().equals(lesson.getLessonId())) {
+                        return t.getState();
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private void markLessonCompleted() {
@@ -55,10 +84,59 @@ public class QuizTaking extends JDialog {
             student.getProgressTrackers().add(newP);
             target = newP;
         }
-        target.completeLesson(lesson);
+
+        // find tracker by lesson id (do not rely on object identity)
+        Tracker found = null;
+        for (Tracker t : target.getTrackers()) {
+            Lesson l = t.getLesson();
+            if (l != null && l.getLessonId().equals(lesson.getLessonId())) {
+                found = t;
+                break;
+            }
+        }
+
+        if (found == null) {
+            // If tracker not found, rebuild trackers to match current course lessons then find again
+            target.updateTrackers(course.getLessons());
+            for (Tracker t : target.getTrackers()) {
+                Lesson l = t.getLesson();
+                if (l != null && l.getLessonId().equals(lesson.getLessonId())) {
+                    found = t;
+                    break;
+                }
+            }
+        }
+
+        if (found == null) {
+            throw new IllegalStateException("Could not find tracker for lesson " + lesson.getLessonId());
+        }
+
+        found.setState(true);
 
         UserDatabaseManager udb = new UserDatabaseManager("users.json");
         udb.updateRecord(student);
         udb.saveToFile();
+    }
+
+    private void checkAndShowCertificateIfComplete(Frame owner) {
+        int total = course.getLessons().size();
+        if (total == 0) return;
+
+        int completed = 0;
+        for (Progress p : student.getProgressTrackers()) {
+            if (p.getCourseId().equals(course.getID())) {
+                for (Tracker t : p.getTrackers()) {
+                    if (t.getState()) completed++;
+                }
+                break;
+            }
+        }
+
+        int percent = (int) ((completed * 100.0) / total);
+        if (percent >= 100) {
+            Certificate cert = new Certificate(owner, student, course);
+            cert.setLocationRelativeTo(owner);
+            cert.setVisible(true);
+        }
     }
 }

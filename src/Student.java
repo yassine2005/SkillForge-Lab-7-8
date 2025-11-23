@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Student extends User {
     private final ArrayList<Progress> progressTrackers = new ArrayList<>();
@@ -45,7 +48,20 @@ public class Student extends User {
         return getCourses();
     }
 
+    public boolean isEnrolledInCourse(String courseId) {
+        return getCourses().contains(courseId);
+    }
+
     public ArrayList<Progress> getProgressTrackers() {
         return progressTrackers;
+    }
+
+    public Map<String, List<QuizResult>> getCourseQuizesResults(String courseId) {
+        for (Progress progress : progressTrackers) {
+            if (progress.getCourseId().equals(courseId)) {
+                return progress.getQuizesResults();
+            }
+        }
+        return new HashMap<>();
     }
 }

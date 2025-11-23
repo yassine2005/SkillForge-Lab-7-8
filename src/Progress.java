@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Progress {
     private final String courseId;
@@ -79,12 +81,12 @@ public class Progress {
         }
     }
 
-    public List<QuizResult> getQuizResults() {
-        ArrayList<QuizResult> allResults = new ArrayList<>();
+    public Map<String, List<QuizResult>> getQuizesResults() {
+        Map<String, List<QuizResult>> resultsMap = new HashMap<>();
         for (Tracker tracker : trackers) {
-            allResults.addAll(tracker.getQuizHistory());
+            resultsMap.put(tracker.getLesson().getID(), tracker.getQuizHistory());
         }
-        return allResults;
+        return resultsMap;
     }
 
     public List<QuizResult> getQuizResultsForCompletedLessons() {
