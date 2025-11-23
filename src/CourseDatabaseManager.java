@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken;
 
 public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
     Type listType = null;
-    protected ArrayList<Lesson> less = new ArrayList<>();
+
     public CourseDatabaseManager(String filename) {
         super(filename);
     }
@@ -34,18 +34,59 @@ public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
         return approved;
     }
 
-      public void approveCourses(String id) {
+    public void approveCourses(String id) {
         Course course = getRecordByID(id);
-          course.setApprovalStatus("Approved");
-          updateRecord(course);
-      }
+        if (course == null) return;
+        course.setApprovalStatus("Approved");
+        updateRecord(course);
+        saveToFile();
+    }
 
     public void rejectCourses(String id) {
         Course course = getRecordByID(id);
-        course.setApprovalStatus("Rejected") ;
+        if (course == null) return;
+        course.setApprovalStatus("Rejected");
         updateRecord(course);
+        saveToFile();
     }
 
+    public boolean deleteCourseAndCleanup(String courseId) {
+        if (courseId == null) return false;
+        Course toRemove = getRecordByID(courseId);
+        if (toRemove == null) return false;
+
+        UserDatabaseManager userDB = new UserDatabaseManager("users.json");
+
+        // Remove course id from all users and remove progress for students
+        ArrayList<User> allUsers = userDB.getRecords();
+        for (int i = 0; i < allUsers.size(); i++) {
+            User u = allUsers.get(i);
+            if (u == null) continue;
+
+            if (u.getCourses() != null && u.getCourses().contains(courseId)) {
+                u.removeCourseId(courseId);
+            }
+
+            if (u instanceof Student) {
+                Student s = (Student) u;
+                for (int p = s.getProgressTrackers().size() - 1; p >= 0; p--) {
+                    Progress prog = s.getProgressTrackers().get(p);
+                    if (prog.getCourseId().equals(courseId)) {
+                        s.getProgressTrackers().remove(p);
+                    }
+                }
+            }
+            userDB.updateRecord(u);
+        }
+
+        userDB.saveToFile();
+
+        // Remove course from this database records
+        deleteCourse(courseId);
+        saveToFile();
+
+        return true;
+    }
 
     @Override
     public void readFromFile() {
@@ -71,4 +112,3 @@ public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
         }
     }
 }
-

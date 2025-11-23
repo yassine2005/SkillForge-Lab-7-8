@@ -42,27 +42,7 @@ public class LessonViewer extends JPanel {
             dialog.setLocationRelativeTo(owner);
             dialog.setVisible(true);
 
-            int completedCount = 0;
-            int total = course.getLessons().size();
 
-            Progress found = null;
-            for (Progress p : student.getProgressTrackers()) {
-                if (p.getCourseId().equals(course.getID())) {
-                    found = p;
-                    for (Tracker t : p.getTrackers()) {
-                        if (t.getState()) completedCount++;
-                    }
-                    break;
-                }
-            }
-
-            int percent = total == 0 ? 0 : (completedCount * 100) / total;
-
-            if (percent == 100) {
-                Certificate cert = new Certificate(owner, student, course);
-                cert.setLocationRelativeTo(owner);
-                cert.setVisible(true);
-            }
 
             revalidate();
             repaint();
