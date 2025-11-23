@@ -51,18 +51,32 @@ public class LessonAdd extends JPanel{
             String lessonID = generateLessonID();
             Lesson newLesson = new Lesson(lessonID,lessonTitle , lessonContent);
             newLesson.setResources(resources);
+            changeToQuizAdd(newLesson);
             course.addLesson(newLesson);
             databaseManager.saveToFile();
 
             JOptionPane.showMessageDialog(this, "lesson added successfully!" + lessonID, "Success", JOptionPane.INFORMATION_MESSAGE);
 
             title.setText("");
+            content.setText("");
+            resource.setText("");
             title.requestFocus();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error adding lesson!", "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
     }
+
+    private void changeToQuizAdd(Lesson newLesson) {
+        QuizAdd Add = new QuizAdd(databaseManager, courseId,newLesson);
+        removeAll();
+        setLayout(new BorderLayout());
+        add(Add, BorderLayout.CENTER);
+        revalidate();
+        repaint();
+
+    }
+
 
     private String generateLessonID() {
         int highest = getHighestID();
