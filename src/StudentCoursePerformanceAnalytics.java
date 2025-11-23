@@ -48,7 +48,7 @@ public class StudentCoursePerformanceAnalytics {
                 totalScorePercentage += bestScorePercentage;
             }
         }
-        this.averageLessonsScore = totalLessons > 0 ? totalScorePercentage / totalLessons : 0.0;
+        this.averageLessonsScore = totalLessons > 0 ? totalScorePercentage / totalLessons * 100.0 : 0.0;
     }
 
     // Getters
@@ -64,12 +64,20 @@ public class StudentCoursePerformanceAnalytics {
         return lessonResultsHistory;
     }
 
-    public double getAverageScore() {
-        return averageLessonsScore;
-    }
+    public int getCompletedLessonsCount() { return completedLessonsCount; }
 
-    public int getCompletedLessonsCount() {
-        return completedLessonsCount;
+    public double getAverageScore() { return averageLessonsScore; }
+    public double getCompletionRate() {
+        int totalLessons = this.lessonResultsHistory.size();
+        return totalLessons > 0 ? (double) this.completedLessonsCount / totalLessons * 100 : 0.0;
+    }
+    public double getQuizAttemptRate() {
+        int totalLessons = this.lessonResultsHistory.size();
+        int quizAttempts = 0;
+        for (List<QuizResult> quizResults : this.lessonResultsHistory.values()) {
+            quizAttempts += quizResults.size();
+        }
+        return totalLessons > 0 ? (double) quizAttempts / totalLessons * 100 : 0.0;
     }
 
     public boolean isLessonCompleted(String lessonId) {
@@ -87,7 +95,6 @@ public class StudentCoursePerformanceAnalytics {
         List<QuizResult> quizResults = this.lessonResultsHistory.get(lessonId);
         return quizResults != null ? quizResults.size() : 0;
     }
-
     public double getLessonBestScorePercentage(String lessonId) {
         List<QuizResult> quizResults = this.lessonResultsHistory.get(lessonId);
         double bestScorePercentage = 0.0;
