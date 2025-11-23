@@ -76,10 +76,7 @@ public class LessonAdd extends JPanel{
         revalidate();
         repaint();
 
-<<<<<<< HEAD
 
-=======
->>>>>>> 250e5ed (added add quiz)
     }
 
 

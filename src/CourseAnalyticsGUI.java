@@ -5,10 +5,7 @@ import java.awt.event.ActionListener;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +36,10 @@ public class CourseAnalyticsGUI extends JFrame {
             // Create chart
             JFreeChart chart = ChartFactory.createBarChart(
                     "Lessons Analytics",   // chart title
-                    "Lessons",             // x-axis label
-                    "Value",               // y-axis label
-                    dataset,               // dataset
-                    PlotOrientation.VERTICAL,
-                    true,                  // include legend
-                    true,                  // tooltips
-                    false                  // URLs
+                    "Lessons",                  // x-axis label
+                    "",                         // y-axis label
+                    dataset
             );
-
 
             // Put chart into a panel
             ChartPanel chartPanel = new ChartPanel(chart);

@@ -83,6 +83,7 @@ public class CourseAnalytics {
             this.lessonAverageScoresPercentages = new HashMap<>();
             return;
         }
+        
         Set<String> lessonIds= this.studentPerformances.get(0).getLessonsResultsHistory().keySet();
         for (String lessonId : lessonIds) {
             double lessonTotalScoresPercentages = 0.0;

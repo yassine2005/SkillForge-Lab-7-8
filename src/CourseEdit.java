@@ -20,37 +20,6 @@ public class CourseEdit extends JPanel {
         setLayout(new BorderLayout());
         add(edit, BorderLayout.CENTER);
 
-<<<<<<< HEAD
-=======
-        deleteLesson.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-            }
-        });
-
-        addLesson.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String id = courseID.getText().trim();
-                if (id.isEmpty()) {
-                    JOptionPane.showMessageDialog(CourseEdit.this, "Enter Course ID ");
-                    return;
-                }
-
-                LessonAdd ld = new LessonAdd(databaseManager, id);
-                CourseEdit.this.removeAll();
-                CourseEdit.this.setLayout(new BorderLayout());
-                CourseEdit.this.add(ld, BorderLayout.CENTER);
-                CourseEdit.this.revalidate();
-                CourseEdit.this.repaint();
-
-
-            }
-        });
-
-
->>>>>>> 3ef9e23 (added add quiz)
         editSpecificLessonButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
