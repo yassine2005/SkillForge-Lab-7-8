@@ -2,38 +2,42 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private final int minScore;
     private final String quizId;
-    private final int noQuestions;
     private List<Questions> questions;
     private int score;
-    private  int maxScore;
+    private int minScore;
+    private int maxScore;
 
-  public Quiz( String quizId,int noQuestions ) {
-      this.minScore= (int) (0.5* questions.size());
+  public Quiz( String quizId, List<Questions> questions) {
       this.quizId = quizId;
-      this.noQuestions = noQuestions;
-      this.maxScore= questions.size();
+      this.questions = questions == null ? new ArrayList<>() : questions;
+      this.minScore= (int) (0.5* this.questions.size());
+      this.maxScore= this.questions.size();
+      this.score = 0;
   }
-
 
    public String getQuizId() {
       return quizId;
    }
 
- public List<Questions> getQuestions() {
+    public List<Questions> getQuestions() {
       return questions;
  }
- public void setQuestions(List<Questions> questions) {
+    public void setQuestions(List<Questions> questions) {
       this.questions = questions;
  }
-  public void addQuestion(Questions question) {
+    public void addQuestion(Questions question) {
       questions.add(question);
+      this.minScore= (int) (0.5* this.questions.size());
+      this.maxScore= this.questions.size();
   }
 
     public void removeQuestion(Questions question) {
         questions.remove(question);
+        this.minScore= (int) (0.5* this.questions.size());
+        this.maxScore= this.questions.size();
     }
+
     public int calculateScore(ArrayList<String> userAnswers) {
         int score = 0;
         for (int i = 0; i < questions.size(); i++) {
@@ -41,6 +45,11 @@ public class Quiz {
                 score++;
             }
         }
+
+        if (score > this.score) {
+            this.score = score;
+        }
+
         return score;
     }
 
