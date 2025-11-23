@@ -13,8 +13,8 @@ public class Progress {
         this.courseId = courseId;
         this.studentID = studentID;
         for (Lesson lesson : lessons) {
-            trackers.add(new Tracker(lesson));
-        }
+            trackers.add(new Tracker(lesson));}
+
     }
 
     public String getCourseId() {
