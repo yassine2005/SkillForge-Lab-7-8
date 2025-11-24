@@ -30,18 +30,10 @@ public class CourseAnalyticsGUI extends JFrame {
             Map<String, Double> averageScores = analytics.getLessonAverageScoresPercentages();
             Map<String, Double> completionRate = analytics.getLessonCompletionRate();
             Map<String, Double> quizAttemptRate = analytics.getLessonQuizAttemptRate();
-            List<String> lists = new ArrayList<>();
             for (String lessonId : analytics.getLessonIds()) {
                 dataset.addValue(averageScores.get(lessonId), "AverageScore", lessonId);
                 dataset.addValue(completionRate.get(lessonId), "CompletionRate", lessonId);
                 dataset.addValue(quizAttemptRate.get(lessonId), "QuizAttemptRate", lessonId);
-                lists.add(String.valueOf(averageScores.get(lessonId)) + ", AverageScore" + ", " + lessonId);
-                lists.add(String.valueOf(completionRate.get(lessonId)) + ", CompletionRate" + ", " + lessonId);
-                lists.add(String.valueOf(quizAttemptRate.get(lessonId)) + ", QuizAttemptRate" + ", " + lessonId);
-            }
-
-            for (String element : lists) {
-                System.out.println(element);
             }
 
             // Create chart
