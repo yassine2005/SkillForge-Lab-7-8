@@ -4,9 +4,9 @@ public class CourseAnalytics {
     private final String courseId;
     private final List<StudentCoursePerformanceAnalytics> studentPerformances;
     private double courseCompletionRate;
-    private Map<String, Double> lessonAverageScoresPercentages = new HashMap<>(); // lessonId -> average score percentage
     private Map<String, Double> lessonCompletionRate = new HashMap<>(); // lessonId -> completion rate
     private Map<String, Double> lessonQuizAttemptRate = new HashMap<>(); // lessonId -> quiz attempt rate
+    private Map<String, Double> lessonAverageScoresPercentages = new HashMap<>(); // lessonId -> average score percentage
 
     // Constructor - takes only final fields, other fields will be calculated
     public CourseAnalytics(String courseId, List<StudentCoursePerformanceAnalytics> studentPerformances) {
@@ -31,8 +31,8 @@ public class CourseAnalytics {
         int studentsCompletedCourse = 0;
         int totalLessons = studentPerformances.get(0).getLessonsResultsHistory().size();
         for (StudentCoursePerformanceAnalytics performance : studentPerformances) {
-            studentsCompletedCourse = performance.getCompletedLessonsCount();
-            if(studentsCompletedCourse == totalLessons) {
+            int CompletedLessons = performance.getCompletedLessonsCount();
+            if(CompletedLessons == totalLessons) {
                 studentsCompletedCourse++;
             }
         }
@@ -53,7 +53,7 @@ public class CourseAnalytics {
                 if(performance.isLessonCompleted(lessonId))
                     studentsCompletedCurrentLesson++;
             }
-            double completionRate = (double) studentsCompletedCurrentLesson / totalStudents * 100;
+            double completionRate = (double) studentsCompletedCurrentLesson / totalStudents;
             this.lessonCompletionRate.put(lessonId, completionRate);
         }
     }
@@ -72,7 +72,7 @@ public class CourseAnalytics {
                 int attemptsCount = performance.getLessonAttemptCount(lessonId);
                 totalAttemptsPerLesson += attemptsCount;
             }
-            double attemptRate = (double) totalAttemptsPerLesson / totalStudents * 100;
+            double attemptRate = (double) totalAttemptsPerLesson / totalStudents;
             this.lessonQuizAttemptRate.put(lessonId, attemptRate);
         }
     }
@@ -80,10 +80,10 @@ public class CourseAnalytics {
     private void calculateLessonAverageScoresPercentages() {
         int totalStudents = studentPerformances.size();
         if (totalStudents == 0) {
-            this.lessonQuizAttemptRate = new HashMap<>();
+            this.lessonAverageScoresPercentages = new HashMap<>();
             return;
         }
-
+        
         Set<String> lessonIds= this.studentPerformances.get(0).getLessonsResultsHistory().keySet();
         for (String lessonId : lessonIds) {
             double lessonTotalScoresPercentages = 0.0;
@@ -91,8 +91,8 @@ public class CourseAnalytics {
                 double lessonScoresPercentages = performance.getLessonBestScorePercentage(lessonId);
                 lessonTotalScoresPercentages += lessonScoresPercentages;
             }
-            double lessonScorePercentageRate = (double) lessonTotalScoresPercentages / totalStudents * 100;
-            this.lessonQuizAttemptRate.put(lessonId, lessonScorePercentageRate);
+            double lessonScorePercentageRate = (double) lessonTotalScoresPercentages / totalStudents / 100;
+            this.lessonAverageScoresPercentages.put(lessonId, lessonScorePercentageRate);
         }
     }
 
@@ -106,10 +106,10 @@ public class CourseAnalytics {
     }
 
     public List<String> getLessonIds() {
-        if (studentPerformances.isEmpty()) {
+        if (studentPerformances.isEmpty())
             return new ArrayList<>();
-        }
-        return new ArrayList<String>(lessonAverageScoresPercentages.keySet());
+
+        return studentPerformances.get(0).getLessonsResultsHistory().keySet().stream().toList();
     }
 
     public double getCourseCompletionRate() {

@@ -18,8 +18,6 @@ public class StudentPerformanceGUI extends JFrame {
         try {
             StudentCoursePerformanceAnalytics analytics =
                     analyticsService.getStudentCoursePerformance(courseID, studentID);
-            JLabel quizRate = new JLabel("Quiz rate: " + analytics.getQuizAttemptRate());
-            add(quizRate, BorderLayout.NORTH);
 
             DefaultCategoryDataset dataset = new DefaultCategoryDataset();
             double averageScores = analytics.getAverageScore();
@@ -27,6 +25,7 @@ public class StudentPerformanceGUI extends JFrame {
 
             dataset.addValue(averageScores, "AverageScore", "Average Score");
             dataset.addValue(completionRate, "CompletionRate", "Completion Rate");
+            dataset.addValue(analytics.getQuizAttemptRate(), "QuizAttemptRate", "Quiz Attempt Rate");
 
             // Create chart
             JFreeChart chart = ChartFactory.createBarChart(
