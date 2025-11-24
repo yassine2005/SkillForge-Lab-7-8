@@ -11,6 +11,7 @@ public class CourseEdit extends JPanel {
     private JTextField courseID;
     private JPanel edit;
     private JButton deleteLesson;
+    private JButton addLesson;
     private final CourseDatabaseManager databaseManager;
 
     public CourseEdit(CourseDatabaseManager databaseManager) {

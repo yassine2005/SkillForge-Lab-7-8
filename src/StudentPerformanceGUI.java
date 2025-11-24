@@ -1,6 +1,7 @@
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import javax.swing.*;
@@ -29,11 +30,16 @@ public class StudentPerformanceGUI extends JFrame {
 
             // Create chart
             JFreeChart chart = ChartFactory.createBarChart(
-                    "Student Analytics",   // chart title
-                    "Performance",                  // x-axis label
-                    "",                         // y-axis label
-                    dataset
+                    "Lessons Analytics",   // chart title
+                    "Lessons",             // x-axis label
+                    "Value",               // y-axis label
+                    dataset,               // dataset
+                    PlotOrientation.VERTICAL,
+                    true,                  // include legend
+                    true,                  // tooltips
+                    false                  // URLs
             );
+
 
             // Put chart into a panel
             ChartPanel chartPanel = new ChartPanel(chart);
