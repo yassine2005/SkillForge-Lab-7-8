@@ -39,7 +39,7 @@ public class CourseLessonsPanel extends JPanel {
                 label.setText(lesson.getTitle() + status);
 
                 if (completed) {
-                    label.setForeground(new Color(0, 135, 0));  // green
+                    label.setForeground(new Color(0, 135, 0));
                 }
 
                 return label;
@@ -63,7 +63,6 @@ public class CourseLessonsPanel extends JPanel {
 
                     f.setVisible(true);
 
-                    // when coming back, refresh display
                     refreshList();
                 }
             }

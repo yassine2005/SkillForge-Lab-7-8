@@ -57,7 +57,6 @@ public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
 
         UserDatabaseManager userDB = new UserDatabaseManager("users.json");
 
-        // Remove course id from all users and remove progress for students
         ArrayList<User> allUsers = userDB.getRecords();
         for (int i = 0; i < allUsers.size(); i++) {
             User u = allUsers.get(i);
@@ -81,7 +80,7 @@ public class CourseDatabaseManager extends JsonDatabaseManager<Course> {
 
         userDB.saveToFile();
 
-        // Remove course from this database records
+
         deleteCourse(courseId);
         saveToFile();
 

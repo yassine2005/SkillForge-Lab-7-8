@@ -74,9 +74,7 @@ public class CourseAdd extends JPanel {
     }
 
     private void changeToLessonAdd(String courseId) {
-        // Try to find parent dashboard and change its content panel
-        // Walk up: this panel is used inside InstructorDashboard via changeContentPanel
-        // Simpler approach: replace current panel contents with LessonAdd
+
         LessonAdd lessonAdd = new LessonAdd(databaseManager, courseId);
         removeAll();
         setLayout(new BorderLayout());

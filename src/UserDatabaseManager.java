@@ -18,8 +18,7 @@ public class UserDatabaseManager extends JsonDatabaseManager<User>{
 
     public UserDatabaseManager(String filename) {
         super(filename);
-        // Create a custom Gson instance with RuntimeTypeAdapter for polymorphic deserialization
-        // Initialize after super() but readFromFile needs it, so we'll create it lazily
+
         customGson = new GsonBuilder()
             .registerTypeAdapter(User.class, new UserDeserializer()).create();
 
@@ -34,7 +33,7 @@ public class UserDatabaseManager extends JsonDatabaseManager<User>{
             return;
         }
 
-        // Use customGson if available, otherwise skip (will be called again after initialization)
+
         if (customGson == null) {
             return;
         }
@@ -52,7 +51,7 @@ public class UserDatabaseManager extends JsonDatabaseManager<User>{
         }
     }
 
-    // Custom deserializer for User that creates the correct subclass based on role
+
     private static class UserDeserializer implements JsonDeserializer<User> {
         @Override
         public User deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)

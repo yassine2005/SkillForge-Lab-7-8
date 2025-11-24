@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class QuizTaking extends JDialog {
@@ -55,7 +56,7 @@ public class QuizTaking extends JDialog {
             ));
 
             JTextArea qText = new JTextArea();
-            qText.setText(q.getQuestionText());
+            qText.setText(q.getQuestionText() != null ? q.getQuestionText() : "");
             qText.setEditable(false);
             qText.setLineWrap(true);
             qText.setWrapStyleWord(true);
@@ -70,10 +71,11 @@ public class QuizTaking extends JDialog {
             groups.add(bg);
 
             List<String> opts = q.getOptions();
+            if (opts == null) opts = new ArrayList<>();
             for (int optIndex = 0; optIndex < 4; optIndex++) {
                 String optText = optIndex < opts.size() ? opts.get(optIndex) : "";
                 JRadioButton rb = new JRadioButton(optText);
-                rb.setActionCommand(optText);
+                rb.setActionCommand(optText != null ? optText : "");
                 bg.add(rb);
                 optionsPanel.add(rb);
             }
@@ -108,12 +110,13 @@ public class QuizTaking extends JDialog {
 
                 int correct = 0;
                 int total = questions.size();
+                ArrayList<String> userAnswers = new ArrayList<>();
 
                 for (int qi = 0; qi < questions.size(); qi++) {
                     ButtonGroup g = groups.get(qi);
                     String answer = g.getSelection().getActionCommand();
+                    userAnswers.add(answer);
                     String correctAns = questions.get(qi).getCorrect();
-
                     if (correctAns != null && answer.equalsIgnoreCase(correctAns)) {
                         correct++;
                     }
@@ -136,7 +139,7 @@ public class QuizTaking extends JDialog {
                 );
 
                 student.addQuizResult(course.getID(), lesson, result);
-                markLessonCompletedInProgress();
+                markLessonCompletedInProgressAndMaybeCertificate((Frame) SwingUtilities.getWindowAncestor(this));
 
                 UserDatabaseManager udb = new UserDatabaseManager("users.json");
                 udb.updateRecord(student);
@@ -147,7 +150,7 @@ public class QuizTaking extends JDialog {
 
             } catch (Exception ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(this, "Error submitting quiz: " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Error submitting quiz: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }
@@ -157,7 +160,7 @@ public class QuizTaking extends JDialog {
             if (p.getCourseId().equals(course.getID())) {
                 for (Tracker t : p.getTrackers()) {
                     for (QuizResult r : t.getQuizHistory()) {
-                        if (r != null && lesson.getLessonId().equals(r.getLessonId())) {
+                        if (r != null && lesson.getLessonId() != null && lesson.getLessonId().equals(r.getLessonId())) {
                             return true;
                         }
                     }
@@ -173,7 +176,7 @@ public class QuizTaking extends JDialog {
             if (p.getCourseId().equals(course.getID())) {
                 for (Tracker t : p.getTrackers()) {
                     for (QuizResult r : t.getQuizHistory()) {
-                        if (lesson.getLessonId().equals(r.getLessonId())) {
+                        if (r != null && lesson.getLessonId() != null && lesson.getLessonId().equals(r.getLessonId())) {
                             attempts++;
                         }
                     }
@@ -184,7 +187,7 @@ public class QuizTaking extends JDialog {
         return attempts;
     }
 
-    private void markLessonCompletedInProgress() {
+    private void markLessonCompletedInProgressAndMaybeCertificate(Frame owner) {
         Progress target = null;
         for (Progress p : student.getProgressTrackers()) {
             if (p.getCourseId().equals(course.getID())) {
@@ -200,7 +203,7 @@ public class QuizTaking extends JDialog {
 
         Tracker found = null;
         for (Tracker t : target.getTrackers()) {
-            if (lesson.getLessonId().equals(t.getLesson().getLessonId())) {
+            if (t.getLesson() != null && lesson.getLessonId().equals(t.getLesson().getLessonId())) {
                 found = t;
                 break;
             }
@@ -209,7 +212,7 @@ public class QuizTaking extends JDialog {
         if (found == null) {
             target.updateTrackers(course.getLessons());
             for (Tracker t : target.getTrackers()) {
-                if (lesson.getLessonId().equals(t.getLesson().getLessonId())) {
+                if (t.getLesson() != null && lesson.getLessonId().equals(t.getLesson().getLessonId())) {
                     found = t;
                     break;
                 }
@@ -218,6 +221,26 @@ public class QuizTaking extends JDialog {
 
         if (found != null) {
             found.setState(true);
+        }
+
+        int total = course.getLessons().size();
+        int completed = 0;
+        for (Tracker t : target.getTrackers()) {
+            if (t.getState()) completed++;
+        }
+
+        int percent = total == 0 ? 0 : (completed * 100) / total;
+
+        if (percent >= 100) {
+            if (target.getCompletionDate() == null) {
+                target.setCompletionDate(new Date());
+                UserDatabaseManager udb = new UserDatabaseManager("users.json");
+                udb.updateRecord(student);
+                udb.saveToFile();
+                Certificate cert = new Certificate(owner, student, course);
+                cert.setLocationRelativeTo(owner);
+                cert.setVisible(true);
+            }
         }
     }
 }
