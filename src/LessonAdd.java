@@ -43,8 +43,9 @@ public class LessonAdd extends JPanel{
             for (String x : parts) {
                 resources.add(x.trim());    }
             }
-        if (lessonTitle.isEmpty() || lessonContent.isEmpty()) {
+        if (lessonTitle.isEmpty() || lessonContent.isEmpty()||resources.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please enter a valid course name!", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
         }
 
         try {
@@ -74,6 +75,7 @@ public class LessonAdd extends JPanel{
         add(Add, BorderLayout.CENTER);
         revalidate();
         repaint();
+
 
     }
 

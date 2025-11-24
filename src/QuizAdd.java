@@ -33,7 +33,8 @@ public class QuizAdd extends JPanel{
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                handleAddQuiz();  // ← kept the same because YOU SAID no logic changes
+                handleAddQuiz();
+                changeToLessonAdd(courseId);
             }
         });
         Add.addActionListener(new ActionListener() {
@@ -55,6 +56,7 @@ public class QuizAdd extends JPanel{
            String correct= answer.getText().trim().toLowerCase();
            if (ques.isEmpty() || firs.isEmpty()||sec.isEmpty()||thir.isEmpty()||four.isEmpty()||correct.isEmpty()) {
                JOptionPane.showMessageDialog(this, "Please enter a valid quiz !", "Error", JOptionPane.ERROR_MESSAGE);
+           return;
            }
            Questions quest=new Questions(ques,correct);
             List<String> options=new ArrayList<>();
@@ -76,7 +78,10 @@ public class QuizAdd extends JPanel{
 
     private void handleAddQuiz() {
 
-
+      if(questions.isEmpty()){
+          JOptionPane.showMessageDialog(this, "Please enter a valid quiz !", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+      }
         try {
             Course course=databaseManager.getRecordByID(courseId);
             String idd = generateQuizID();
@@ -118,5 +123,14 @@ public class QuizAdd extends JPanel{
                 }  }
         }
         return highest;
+    }
+
+    private void changeToLessonAdd(String courseId) {
+        LessonAdd lessonAdd = new LessonAdd(databaseManager, courseId);
+        removeAll();
+        setLayout(new BorderLayout());
+        add(lessonAdd, BorderLayout.CENTER);
+        revalidate();
+        repaint();
     }
 }
