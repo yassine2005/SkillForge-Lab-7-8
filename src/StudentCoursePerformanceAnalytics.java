@@ -48,7 +48,7 @@ public class StudentCoursePerformanceAnalytics {
                 totalScorePercentage += bestScorePercentage;
             }
         }
-        this.averageLessonsScore = totalLessons > 0 ? totalScorePercentage / totalLessons * 100.0 : 0.0;
+        this.averageLessonsScore = totalLessons > 0 ? totalScorePercentage / totalLessons / 100 : 0.0;
     }
 
     // Getters
@@ -69,7 +69,7 @@ public class StudentCoursePerformanceAnalytics {
     public double getAverageScore() { return averageLessonsScore; }
     public double getCompletionRate() {
         int totalLessons = this.lessonResultsHistory.size();
-        return totalLessons > 0 ? (double) this.completedLessonsCount / totalLessons * 100 : 0.0;
+        return totalLessons > 0 ? (double) this.completedLessonsCount / totalLessons : 0.0;
     }
     public double getQuizAttemptRate() {
         int totalLessons = this.lessonResultsHistory.size();
@@ -77,7 +77,7 @@ public class StudentCoursePerformanceAnalytics {
         for (List<QuizResult> quizResults : this.lessonResultsHistory.values()) {
             quizAttempts += quizResults.size();
         }
-        return totalLessons > 0 ? (double) quizAttempts / totalLessons * 100 : 0.0;
+        return totalLessons > 0 ? (double) quizAttempts / totalLessons : 0.0;
     }
 
     public boolean isLessonCompleted(String lessonId) {
