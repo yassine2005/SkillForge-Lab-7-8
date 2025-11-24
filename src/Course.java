@@ -115,7 +115,14 @@ public class Course implements Record {
         return "REJECTED".equalsIgnoreCase(approvalStatus);
     }
 
-
+    public Lesson getLessondByID(String recordID) {
+        for (Lesson records: lessons){
+            if (records.getID().equals(recordID)){
+                return records;
+            }
+        }
+        return null;
+    }
 
 
 

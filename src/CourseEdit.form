@@ -80,6 +80,14 @@
           <text value="Edit Specific Lesson"/>
         </properties>
       </component>
+      <component id="c21e9" class="javax.swing.JButton" binding="addLesson">
+        <constraints>
+          <grid row="8" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="   Add Lesson"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
